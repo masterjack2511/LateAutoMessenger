@@ -92,14 +92,18 @@ public class ProximityAlertHelper {
 	    
 	      Address addr=null;
 	      Geocoder gc = new Geocoder(caller);
+	      if(Geocoder.isPresent()){
+	    	  Log.d("getLocation", "Service is present");
+	      } else {
+	    	  Log.d("getLocation", "Service is not present");
+	      }
+	    	  
 	      try {
 				List<Address> list= gc.getFromLocationName(address, 10);
 				
 				if(!list.isEmpty())
 				{
 					addr = list.get(0);
-					
-					
 				}
 	      }
 	      catch(Exception e)
@@ -109,6 +113,26 @@ public class ProximityAlertHelper {
 		  
 		return addr;
 		  
+	  }
+	  
+	  public Address getAddressName(Context caller, double lat, double lng){
+		  Address addr = null;
+		  Geocoder gc = new Geocoder(caller);
+		  if(Geocoder.isPresent()){
+	    	  Log.d("getLocation", "Service is present");
+	      } else {
+	    	  Log.d("getLocation", "Service is not present");
+	      }
+		  try {
+			  List<Address> list = gc.getFromLocation(lat, lng, 10);
+			  
+			  if(!list.isEmpty()) {
+				  addr = list.get(0);
+			  }
+		  } catch (Exception e) {
+			  Log.e("getAddressName", "error="+e.getMessage());
+		  }
+		  return addr;
 	  }
 	  
 	  public boolean addProximityAlerts(Context caller, ArrayList<ProximityAlert> reminders) {

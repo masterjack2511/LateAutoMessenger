@@ -136,6 +136,29 @@ public class ProximityAlertSetActivity extends Activity {
 	    		Toast.makeText(this, "Could not convert into address..try later", Toast.LENGTH_LONG).show();
 	    		finish();
 	    	}
+	    //If using current location, generates address string from lat/long coordinates
+	    } else {
+	    	Address addr = ProximityAlertHelper.getInstance().getAddressName(this, this.lat, this.lng);
+	    	if(addr != null){
+	    		StringBuilder addressBuilder = new StringBuilder();
+	    		String thoroughfare = addr.getThoroughfare();
+	    		String sublocality = addr.getSubLocality();
+	    		String adminArea = addr.getAdminArea();
+	    		String country = addr.getCountryName();
+	    		String postalCode = addr.getPostalCode();
+	    		
+	    		if(thoroughfare != null) addressBuilder.append(thoroughfare + ", ");
+	    		if(sublocality != null) addressBuilder.append(sublocality + ", ");
+	    		if(adminArea != null) addressBuilder.append(adminArea + ", ");
+	    		if(country != null) addressBuilder.append(country + ", ");
+	    		if(postalCode !=null) addressBuilder.append(postalCode);
+	    		
+	    		String address = addressBuilder.toString();
+	    		if(address.endsWith(", ")){
+	    			address = address.substring(0, address.length()-2);
+	    		}
+	    		desc = address;
+	    	}
 	    }
 	    
 
