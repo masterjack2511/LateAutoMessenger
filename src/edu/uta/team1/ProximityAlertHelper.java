@@ -1,10 +1,13 @@
 package edu.uta.team1;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 
+import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -85,7 +88,7 @@ public class ProximityAlertHelper {
 	    }
 	  }
 
-	  public Address getLocation(Context caller,String address)
+	  public Address getLocation(Context caller, String address)
 	  {
 		  String context = Context.LOCATION_SERVICE;
 	      LocationManager mgr = ((LocationManager) caller.getSystemService(context));
@@ -158,12 +161,15 @@ public class ProximityAlertHelper {
 	        intent.putExtra("descr", reminder.Desc);
 	        PendingIntent proximityIntent = PendingIntent.getBroadcast(caller, i, intent, 0);
 	        float proxRadius = Float.parseFloat(PreferenceManager.getDefaultSharedPreferences(caller).getString("proxradius", "2"));
-	        //TODO: expiry based on user's input
+	        //TODO: expiry based on user's input*/
 	        long expiry = getExpiry(reminder);
-	        Log.d("addProximityAlert", "adding alert for "+reminder.Name);
+	        Log.d("addProximityAlert", "adding alert for "+ reminder.Name);
 	        
-	        mgr.addProximityAlert(reminder.Lat, reminder.Lng, proxRadius, expiry, proximityIntent);
-	        proximityIntentsMap.put(reminder, proximityIntent);
+	        //mgr.addProximityAlert(reminder.Lat, reminder.Lng, proxRadius, expiry, proximityIntent);
+	        //proximityIntentsMap.put(reminder, proximityIntent);
+	        
+	        AlarmReceiver ar = new AlarmReceiver();
+	        ar.setAlarm(caller, expiry);
 	      }
 	      return true;
 	    }
@@ -172,9 +178,11 @@ public class ProximityAlertHelper {
 
 	  private long getExpiry(ProximityAlert reminder) {
 		long exp=0;  
-		Date d = new Date(reminder.Year, reminder.Month, reminder.DayOfMonth);
-		exp = d.getTime()- System.currentTimeMillis();
+		/*Date d = new Date(reminder.Year, reminder.Month, reminder.DayOfMonth);
+		exp = d.getTime()- System.currentTimeMillis();*/
 		
+		Calendar c = new GregorianCalendar(reminder.Year, reminder.Month, reminder.DayOfMonth, reminder.Hour, reminder.Min);
+		exp = c.getTimeInMillis();
 		return exp;
 	}
 
