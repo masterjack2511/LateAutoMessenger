@@ -18,6 +18,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
@@ -33,10 +35,11 @@ public class ProximityAlertSetActivity extends Activity {
 
 	  private ProximityAlert current;
 	  private CheckBox currentC;
+	  //final Button addContactButton;
 	  public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
 	    setContentView(R.layout.alert_reminder);
-	    
+	    //addContactButton = (Button) findViewById(R.id.addContactButton);
 	    currentC = (CheckBox) findViewById(R.id.currentC);
 
 	    this.newReminder = !(getIntent().getExtras() != null && getIntent().getExtras().containsKey("current"));
@@ -48,7 +51,7 @@ public class ProximityAlertSetActivity extends Activity {
 	      updateWithNewLocation(((LocationManager) getSystemService(context)).getLastKnownLocation(ProximityAlertHelper.getInstance().Provider));
 	    }
 	    else {
-	    	currentC.setVisibility(CheckBox.INVISIBLE);
+	      currentC.setVisibility(CheckBox.INVISIBLE);
 	      current = retrieveCurrentAlertReminder();
 	      ((TextView) findViewById(R.id.headerT)).setText("Lat:" + current.Lat + "\nLong:" + current.Lng);
 	      ((TextView) findViewById(R.id.nameE)).setText(current.Name);
@@ -302,7 +305,8 @@ public class ProximityAlertSetActivity extends Activity {
 	    }
 	  };
 
-	  private void updateWithNewLocation(Location location) {
+	  private void updateWithNewLocation(Location location) 
+	  {
 	    String latLongString;
 	    TextView myLocationText = (TextView) findViewById(R.id.headerT);
 	    if (location != null) {
@@ -314,5 +318,10 @@ public class ProximityAlertSetActivity extends Activity {
 	    }
 
 	    myLocationText.setText("Your Current Position is:\n" + latLongString);
+	  }
+	  public void addContactList(View view)
+	  {
+		  Intent contactIntent = new Intent(this, Activity_Contacts.class);
+		  startActivityForResult (contactIntent, 0);
 	  }
 	}
